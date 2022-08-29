@@ -67,7 +67,7 @@ RUN set -eux; \
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###
 RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
-	docker-php-ext-install -j$(nproc) pdo_pgsql; \
+	docker-php-ext-install -j$(nproc) pdo pdo_pgsql; \
 	apk add --no-cache --virtual .pgsql-rundeps so:libpq.so.5; \
 	apk del .pgsql-deps
 ###< doctrine/doctrine-bundle ###
@@ -132,8 +132,8 @@ COPY docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
-	pecl install xdebug; \
-	docker-php-ext-enable xdebug; \
+	pecl install xdebug \
+	docker-php-ext-enable xdebug \
 	apk del .build-deps
 
 RUN rm -f .env.local.php
