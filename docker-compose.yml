@@ -25,20 +25,26 @@ services:
       XDEBUG_CONFIG: "client_host=192.168.1.112"
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-
-###> doctrine/doctrine-bundle ###
+    ports:
+      - '9000:9000'
   database:
     image: postgres:${POSTGRES_VERSION:-14}-alpine
     environment:
       POSTGRES_DB: p2p
-      # You should definitely change the password in production
       POSTGRES_PASSWORD: p2p
       POSTGRES_USER: p2p
     volumes:
       - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
-
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8082:80'
+    volumes:
+      - ./:/srv/app
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - database
 volumes:
   db-data:

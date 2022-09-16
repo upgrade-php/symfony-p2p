@@ -8,17 +8,29 @@ use ErrorException;
 
 class NameTest extends TestCase
 {
-    public function testCreateFullNameSucess(): void
+    public function getNames(){
+        return [
+            ["Ian Assunção", "Ian", "Assunção"],
+            ["Vicente de Paulo Pinheiro Filho", "Vicente de Paulo", "Pinheiro Filho"],
+            ["Márcion Ferreira Matos", "Márcion", "Matos"],           
+        ];
+    }
+
+    /**
+     * @dataProvider getNames
+     */
+
+    public function testCreateFullNameSucess($name, $fistName, $lastName): void
     {
-        $name = new Name("Vicente de Paulo Pinheiro Filho");
-        $this->assertEquals($name->getFirstName(), "Vicente de Paulo");
-        $this->assertEquals($name->getLastName(), "Pinheiro Filho");
+        $n = new Name($name);
+        $this->assertEquals($n->getFirstName(), $fistName);
+        $this->assertEquals($n->getLastName(), $lastName);
     }
 
     public function testCreateFullNameWithTreeNames(): void
     {
         $name = new Name("Antonio Cesar Pinheiro");
-        $this->assertEquals($name->getFirstName(), "Antonio Cesar");
+        $this->assertEquals($name->getFirstName(), "Antonio");
         $this->assertEquals($name->getLastName(), "Pinheiro");
     }
 
